@@ -11,7 +11,7 @@ class TestUntitled < Test::Unit::TestCase
     expired_backstage_passes = Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 10)
     items = [foo, aged_brie, sulfuras, backstage_passes]
 
-    GildedRose.new(items).update_quality()
+    GildedRose.new(items).execute
     assert_equal foo.sell_in, 0
     assert_equal foo.quality, 0
     assert_equal aged_brie.sell_in, 0
