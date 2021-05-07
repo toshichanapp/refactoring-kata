@@ -1,3 +1,65 @@
+class AgedBrie
+  def initialize(item)
+    @item = item
+  end
+
+  def execute
+    update_sell_in(@item)
+    update_quality(@item)
+  end
+
+  private
+
+  def update_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def update_quality(item)
+    if item.quality < 50
+      item.quality += 1
+    end
+
+    if item.sell_in.negative? && item.quality < 50
+      item.quality += 1
+    end
+  end
+end
+
+class BackstagePasses
+  def initialize(item)
+    @item = item
+  end
+
+  def execute
+    update_sell_in(@item)
+    update_quality(@item)
+  end
+
+  private
+
+  def update_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def update_quality(item)
+    if item.quality < 50
+      item.quality += 1
+    end
+
+    if item.sell_in < 11 && item.quality < 50
+      item.quality += 1
+    end
+
+    if item.sell_in < 6 && item.quality < 50
+      item.quality += 1
+    end
+
+    if item.sell_in.negative?
+      item.quality -= item.quality
+    end
+  end
+end
+
 class GildedRose
 
   def initialize(items)
@@ -6,14 +68,13 @@ class GildedRose
 
   def execute
     @items.each do |item|
+      next if item.name == 'Sulfuras, Hand of Ragnaros'
+
       case item.name
       when 'Aged Brie'
-        update_sell_in(item)
-        update_aged_brie_quality(item)
+        AgedBrie.new(item).execute
       when 'Backstage passes to a TAFKAL80ETC concert'
-        update_sell_in(item)
-        update_backstage_quality(item)
-      when 'Sulfuras, Hand of Ragnaros'
+        BackstagePasses.new(item).execute
       else
         update_sell_in(item)
         update_quality(item)
@@ -27,40 +88,12 @@ class GildedRose
     item.sell_in -= 1
   end
 
-  def update_aged_brie_quality(item)
-    if item.quality < 50
-      item.quality += 1
-    end
-
-    if item.sell_in < 0 && item.quality < 50
-      item.quality += 1
-    end
-  end
-
-  def update_backstage_quality(item)
-    if item.quality < 50
-      item.quality += 1
-    end
-
-    if item.sell_in < 11 && item.quality < 50
-      item.quality += 1
-    end
-
-    if item.sell_in < 6 && item.quality < 50
-      item.quality += 1
-    end
-
-    if item.sell_in < 0
-      item.quality -= item.quality
-    end
-  end
-
   def update_quality(item)
-    if item.quality > 0
+    if item.quality.positive?
       item.quality -= 1
     end
 
-    if item.sell_in < 0
+    if item.sell_in.negative?
       item.quality -= item.quality
     end
   end
@@ -75,7 +108,7 @@ class Item
     @quality = quality
   end
 
-  def to_s()
+  def to_s
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
