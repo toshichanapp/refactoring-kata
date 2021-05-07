@@ -60,6 +60,31 @@ class BackstagePasses
   end
 end
 
+class Conjured
+  def initialize(item)
+    @item = item
+  end
+
+  def execute
+    update_sell_in(@item)
+    update_quality(@item)
+  end
+
+  private
+
+  def update_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def update_quality(item)
+    if item.quality < 4
+      item.quality -= item.quality
+    else
+      item.quality -= 4
+    end
+  end
+end
+
 class GildedRose
 
   def initialize(items)
@@ -75,6 +100,8 @@ class GildedRose
         AgedBrie.new(item).execute
       when 'Backstage passes to a TAFKAL80ETC concert'
         BackstagePasses.new(item).execute
+      when 'Conjured Mana Cake'
+        Conjured.new(item).execute
       else
         update_sell_in(item)
         update_quality(item)
