@@ -3,3 +3,4 @@ source "https://www.rubygems.org"
 gem "pry"
 gem "approvals"
 gem "rspec"
+gem 'rake'
